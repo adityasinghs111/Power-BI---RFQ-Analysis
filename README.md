@@ -23,7 +23,7 @@ This dashboard answers all of the above in a single, self-service Power BI repor
 
 | RFQ Analysis | Top 50 Brand Summary | Brand Analysis |
 |---|---|---|
-| ![RFQ Analysis](Screenshots/RFQ%20Analysis.png) | ![Top 50 Brand Summary](Screenshots/Top%2050%20Brand%20Summary.png) | ![Brand Analysis](Screenshots/Brand%20Analysis.png) |
+| ![RFQ Analysis](Screenshots/RFQ%20Analysis.png) | ![Top 50 Brand Summary](Screenshots/Top%2050%20Brands%20Summary.png) | ![Brand Analysis](Screenshots/Brand%20Analysis.png) |
 
 | Seller Analysis | Client Analysis | |
 |---|---|---|

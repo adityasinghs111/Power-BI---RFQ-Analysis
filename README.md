@@ -1,115 +1,88 @@
-# 📊 RFQ Analysis — Procurement Funnel Intelligence Dashboard
+# 📊 RFQ Analysis — Power BI Dashboard
 
-**A Power BI solution tracking the complete Request-for-Quote (RFQ) lifecycle — from buyer request to final purchase order — across brands, sellers, and clients.**
+An end-to-end procurement analytics solution built for **Procmart Private Limited**, designed to track the complete Request-for-Quote (RFQ) lifecycle — from buyer request to final purchase order — across brands, sellers, and clients.
 
-> Built for real-world procurement operations at **Procmart Pvt. Ltd.**, this dashboard suite gives category and sourcing teams a single source of truth for conversion rates, pricing gaps, and vendor performance across thousands of monthly transactions.
+The dashboard is built on a **star schema data model** (fact + dimension tables) covering the full RFQ → Seller Quote → Buyer Quote → Buyer PO → Seller PO funnel, exposed through interactive, filterable visuals built entirely with DAX and Power Query.
 
 ---
 
 ## 🎯 Business Problem
 
-Procurement teams raise thousands of RFQs every month, but the journey from *"request sent"* to *"PO raised"* passes through multiple stages — Seller Quote → Buyer Quote → Buyer PO → Seller PO — with drop-offs and pricing changes at every step. Without a unified view, teams couldn't answer basic questions like:
+Procurement teams raise thousands of RFQs every month, but the journey from *"request sent"* to *"PO raised"* passes through multiple stages, with drop-offs and pricing changes at every step. Teams need to answer questions like:
 
-- Which RFQs never got a seller quote?
+- Which RFQs never received a seller quote?
 - Where is margin being lost between the seller's price and the buyer's price?
-- Which brands, sellers, and clients are driving (or dragging) conversion?
-- Is a request stuck, pending, or fully converted?
+- Which brands, sellers, and clients are driving — or dragging — conversion?
+- Is a given request stuck, pending, or fully converted?
 
-This project consolidates that entire funnel into five interconnected dashboards, letting stakeholders slice by month, brand, client, seller, or individual RFQ number in seconds.
-
----
-
-## 🖥️ Dashboard Preview
-
-*(Screenshots available in [`/screenshots`](./screenshots) — data shown is from live company operations; figures are shared for portfolio purposes only.)*
-
-### 1. RFQ Analysis — Executive Overview
-Category-wise and state-wise RFQ → Quote → PO funnel, conversion trend line, and top clients/brands by volume.
-
-![RFQ Analysis](./screenshots/RFQ_Analysis.png)
-
-### 2. Top 50 Brand Summary
-Deep dive into the highest-volume brands with buyer quote conversion %, PO conversion %, and quote-to-PO amount conversion — the KPIs category managers check weekly.
-
-![Top 50 Brand Summary](./screenshots/Top_50_Brands_Summary.png)
-
-### 3. Brand Analysis
-Brand-level breakdown of RFQ → Seller Quote → Buyer Quote → PO funnel with an **unquoted-request counter** that instantly flags demand no seller has responded to.
-
-![Brand Analysis](./screenshots/Brand_Analysis.png)
-
-### 4. Seller Analysis
-Seller-wise conversion rate and buyer quote amount, with a row-level **Price Flow View** exposing list price, discount %, and gross margin % for every line item.
-
-![Seller Analysis](./screenshots/Seller_Analysis.png)
-
-### 5. Client Analysis
-Client-wise buyer quote amount ranking alongside product- and brand-level gross margin trends, so account managers can see exactly where a client's spend is going.
-
-![Client Analysis](./screenshots/Client_Analysis.png)
+This dashboard answers all of the above in a single, self-service Power BI report — no manual pivot tables, no static spreadsheets.
 
 ---
 
-## 🧠 What This Dashboard Actually Solves
+## 🖼️ Dashboard Preview
 
-| Metric | Why It Matters |
-|---|---|
-| **Conversion Rate (RFQ & Value)** | Measures how much of raised demand actually turns into revenue |
-| **Unquoted Requests** | Flags RFQs sitting with *no seller response* — direct lost-opportunity signal |
-| **Gross Margin %** | Line-item level margin between seller quote price and buyer quote price |
-| **Price Flow View** | Full audit trail: List Price → Seller Quote → Buyer Quote → Buyer PO → Seller PO, per item |
-| **Buyer Quote → PO Conversion %** | Identifies where quoted deals stall before becoming a PO |
+| RFQ Analysis | Top 50 Brand Summary | Brand Analysis |
+|---|---|---|
+| ![RFQ Analysis](Screenshots/RFQ%20Analysis.png) | ![Top 50 Brand Summary](Screenshots/Top%2050%20Brand%20Summary.png) | ![Brand Analysis](Screenshots/Brand%20Analysis.png) |
 
----
-
-## 🏗️ Data Model & DAX
-
-The dashboard runs on a **normalized star schema** (fact + dimension tables) rather than a single flat table, purpose-built to handle multi-stage many-to-one relationships (one RFQ item can carry multiple seller quotes, multiple buyer quotes, etc.) without fan-out breaking the numbers.
-
-**Core tables:** `Dimension Table` (conformed dimension for brand/client/date) · `Seller Quote` · `Buyer Quote` · `Buyer PO` · `Seller PO` · `Calendar` · `Categories`
-
-Key DAX techniques used (full measures documented in [`/dax`](./dax)):
-- **Winning-price selection** using `MINX` + `VAR/RETURN` patterns to resolve the lowest qualifying seller price per item
-- **Conversion rate measures** (RFQ count-based and Amount-based) using `DIVIDE` with safe zero-handling
-- **Gross Margin %** measures that separate genuine zero-cost data issues from real margin calculations
-- Filter-context-safe measures (`REMOVEFILTERS`, `FILTER(VALUES(...))`) to keep visuals anchored to the Dimension table regardless of which fact table drives a given chart
+| Seller Analysis | Client Analysis | |
+|---|---|---|
+| ![Seller Analysis](Screenshots/Seller%20Analysis.png) | ![Client Analysis](Screenshots/Client%20Analysis.png) | |
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Key Features
 
-- **Power BI Desktop** — data modeling, DAX, report design
-- **Power Query (M)** — data cleaning, shaping, and transformation
-- **DAX** — calculated columns, measures, KPIs
-- **Star Schema Modeling** — dimensional design for scalable, fan-out-safe analytics
-- **Row-Level Security (RLS)** — role-based data access
-
----
-
-## 📈 Skills Demonstrated
-
-- End-to-end BI development: raw data → data model → DAX → interactive report
-- Funnel/conversion analysis across a multi-stage transactional process
-- Star schema design for real transactional (non-trivial many-to-one) data
-- Business-first KPI design — built from what procurement stakeholders actually need to act on
-- Dashboard UX: cross-page filter panels, drill-through-ready visuals, row-level detail views
+- **Executive KPI Header** — Total RFQ, Seller Quote, Buyer Quote, Buyer PO, and Seller PO counts pinned across every page, with global Month, Converted/Pending, and entity filters (Clients, Sellers, Brands)
+- **Unquoted Request Tracker** — a dedicated donut KPI surfacing RFQs sitting with *no seller response*, a direct lost-opportunity signal
+- **Conversion Rate (RFQ & Value)** — dual conversion metrics distinguishing "how many requests converted" from "how much value converted," since the two often diverge
+- **Top 50 Brand Summary** — combo chart ranking brands by Buyer Quote Amount against Amount Conversion %, backed by a full drill table (Total RFQ, Buyer Quote/PO Conversion %, BQuote-to-BPO Amount Conversion %)
+- **Brand / Seller / Client Analysis Pages** — each with its own funnel breakdown, ranked contribution chart, and cross-filtering Buyer Req No slicer
+- **Price Flow View (Row-Level Audit Trail)** — a drill-down table exposing List Price → Seller Quote Unit Price → Buyer Quote Unit Price → Buyer PO Unit Price → Seller PO Unit Price with Gross Margin % per line item
+- Fully interactive: every visual cross-filters the report on click, with Month, Converted/Pending, and entity slicers applied globally
 
 ---
 
-## 🔒 A Note on Data
+## 🧮 Data Model
 
-This dashboard was built on live operational data from Procmart Pvt. Ltd. The `.pbix` file and raw dataset are **not included** in this repository for confidentiality reasons. This repo shares the **methodology, data model, DAX logic, and dashboard screenshots** to demonstrate the analytical approach and technical build.
+Built on a **star schema** — a central **Dimension Table** (conformed dimension for brand, client, date, category) connected to four transactional fact tables: **Seller Quote**, **Buyer Quote**, **Buyer PO**, and **Seller PO**, chained together via `buyerReqItemId` → `sellerReqItemId` → `buyerQuoteItemId` → `buyerPOItemId`.
 
----
+All visuals anchor on Dimension table columns for row context (Brand, Client, Seller, Date), with every KPI — RFQ Count, Conversion Rate, Gross Margin %, Buyer/Seller Unit Price — built as a DAX measure. This keeps the model consistent despite each fact table sitting at a different stage of the funnel and prevents many-to-one fan-out from distorting the numbers.
 
-## 👤 About Me
-
-**Aditya** — Executive, Indirect Operations at Procmart Pvt. Ltd. | Power BI Developer
-
-I build production procurement analytics dashboards end-to-end — from data modeling to DAX to final report design — for a live business, not just tutorial datasets.
-
-📫 Feel free to connect or reach out if you'd like to discuss the approach behind this project.
+📄 See [Measures](DAX/Measures.md) and [Calculated Columns](DAX/Calculated%20Columns.md) for full DAX documentation.
 
 ---
 
-⭐ If you found this project useful or interesting, consider giving it a star!
+## 🔧 Key DAX Techniques Used
+
+- **Winning-price selection** — `MINX` + `VAR/RETURN` patterns to resolve the lowest qualifying seller price per RFQ line item
+- **Conversion Rate measures (RFQ & Value)** — `DIVIDE`-based measures with safe zero-handling, split between count-based and amount-based conversion
+- **Gross Margin %** — a measure architecture that separates genuine zero-cost data quality issues from real margin calculations, rather than letting bad data distort the KPI
+- **Filter-context-safe funnel measures** — `FILTER(VALUES(...))` and `REMOVEFILTERS()` used across the Seller Quote → Buyer Quote → Buyer PO → Seller PO chain to keep every visual anchored to the Dimension table regardless of which fact table drives it
+
+---
+
+## 🛠️ Tools & Skills
+
+`Power BI` · `DAX` · `Power Query` · `Star Schema Data Modeling` · `Row-Level Security (RLS)`
+
+---
+
+## 💡 Skills Demonstrated
+
+- Data Modeling (Star Schema)
+- DAX
+- Filter Context
+- Power Query
+- Funnel / Conversion Analysis
+- KPI Design
+- Interactive Dashboard Development
+- Procurement Analytics
+
+---
+
+## 👤 Contact
+
+**Aditya Singh**
+
+- LinkedIn: *(www.linkedin.com/in/aditya-singhs)*
